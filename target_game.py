@@ -2,31 +2,39 @@ from typing import List
 import string
 import random
 
+
 def random_words():
     letters = string.ascii_lowercase
     items = []
     while len(items) < 9:
         letter = random.choice(letters)
-        if letter not in letters:
-            letters.append(letter)
-    return letters
+        if letter not in items:
+            items.append(letter)
+    return items
 
 
-def generate_grid() -> List[List[str]]:
+def generate_grid():
     """
     Generates list of lists of letters - i.e. grid for the game.
     e.g. [['I', 'G', 'E'], ['P', 'I', 'S'], ['W', 'M', 'G']]
     """
-
+    letters = random_words()
+    counter = 0
+    game_field = []
+    for i in range(3):
+        game_field.append([])
+        while len(game_field[i]) < 3:
+            game_field[i].append(letters[counter].upper())
+            counter += 1
+    return game_field
 
 
 def get_words(f: str, letters: List[str]) -> List[str]:
     """
     Reads the file f. Checks the words with rules and returns a list of words.
     """
-    words = []
-    with open(f) as file:
-
+    with open(f, 'r') as file:
+        for
 
 
 def get_user_words() -> List[str]:
@@ -49,3 +57,5 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
 
 def results():
     pass
+
+print(generate_grid())
