@@ -4,6 +4,9 @@ import random
 
 
 def random_letters():
+    """
+    Generates random letters
+    """
     letters = string.ascii_lowercase
     items = []
     while len(items) < 9:
@@ -11,7 +14,7 @@ def random_letters():
     return items
 
 
-def generate_grid(letters):
+def generate_grid(letters) -> List[List[str]]:
     """
     Generates list of lists of letters - i.e. grid for the game.
     e.g. [['I', 'G', 'E'], ['P', 'I', 'S'], ['W', 'M', 'G']]
@@ -88,6 +91,9 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
 
 
 def results(*args):
+    """
+    Write results into result.txt
+    """
     with open('result.txt', 'w') as file:
         file.write(f'Correct words: {args[1]}\n')
         file.write('All words: \n')
@@ -102,6 +108,9 @@ def results(*args):
 
 
 def main():
+    """
+    main function. Executes all code
+    """
     letters = random_letters()
     words = get_words('en.txt', letters)
     print(generate_grid(letters))
