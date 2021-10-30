@@ -3,7 +3,7 @@ import string
 import random
 
 
-def random_words():
+def random_letters():
     letters = string.ascii_lowercase
     items = []
     while len(items) < 9:
@@ -11,12 +11,11 @@ def random_words():
     return items
 
 
-def generate_grid():
+def generate_grid(letters):
     """
     Generates list of lists of letters - i.e. grid for the game.
     e.g. [['I', 'G', 'E'], ['P', 'I', 'S'], ['W', 'M', 'G']]
     """
-    letters = random_words()
     counter = 0
     game_field = []
     for i in range(3):
@@ -24,7 +23,7 @@ def generate_grid():
         while len(game_field[i]) < 3:
             game_field[i].append(letters[counter].upper())
             counter += 1
-    words = get_words('en.txt', letters)
+    return game_field
 
 
 def get_words(f: str, letters: List[str]) -> List[str]:
@@ -62,7 +61,8 @@ def get_user_words() -> List[str]:
     Gets words from user input and returns a list with these words.
     Usage: enter a word or press ctrl+d to finish.
     """
-    pass
+    words = input(">>> ").split(' ')
+    return words
 
 
 def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
@@ -72,11 +72,43 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
     Checks user words with the rules and returns list of those words
     that are not in dictionary.
     """
-    pass
+    wrong_words = []
+    correct_words = []
+    unused_words = []
+    for i in user_words:
+        if i not in words_from_dict:
+            wrong_words.append(i)
+        else:
+            correct_words.append(i)
+    for i in words_from_dict:
+        if i not in user_words:
+            unused_words.append(i)
+
+    return wrong_words, len(correct_words), unused_words
 
 
-def results():
-    pass
+def results(*args):
+    with open('result.txt', 'w') as file:
+        file.write(f'Correct words: {args[1]}\n')
+        file.write('All words: \n')
+        for i in args[3]:
+            file.write(f'- {i} \n')
+        file.write(f'Wrong words:\n')
+        for i in args[0]:
+            file.write(f'- {i} \n')
+        file.write('Unused words:\n')
+        for i in args[2]:
+            file.write(f'- {i} \n')
 
 
-print(generate_grid())
+def main():
+    letters = random_letters()
+    words = get_words('en.txt', letters)
+    print(generate_grid(letters))
+    user_input = get_user_words()
+    a = get_pure_user_words(user_input, letters, words)
+    results(a[0], a[1], a[2], words)
+
+
+if __name__ == '__main__':
+    main()
