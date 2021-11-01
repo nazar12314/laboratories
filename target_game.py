@@ -2,19 +2,11 @@ from typing import List
 import string
 import random
 
-
-def random_letters():
-    """
-    Generates random letters
-    """
-    letters = string.ascii_lowercase
-    items = []
-    while len(items) < 9:
-        items.append(random.choice(letters))
-    return items
+LETTERS = string.ascii_lowercase
+ITEMS = [random.choice(LETTERS) for _ in range(9)]
 
 
-def generate_grid(letters) -> List[List[str]]:
+def generate_grid() -> List[List[str]]:
     """
     Generates list of lists of letters - i.e. grid for the game.
     e.g. [['I', 'G', 'E'], ['P', 'I', 'S'], ['W', 'M', 'G']]
@@ -24,7 +16,7 @@ def generate_grid(letters) -> List[List[str]]:
     for i in range(3):
         game_field.append([])
         while len(game_field[i]) < 3:
-            game_field[i].append(letters[counter].upper())
+            game_field[i].append(ITEMS[counter].upper())
             counter += 1
     return game_field
 
@@ -40,7 +32,7 @@ def get_words(f: str, letters: List[str]) -> List[str]:
         for line in file:
             line = line.replace("\n", '')
             if len(line) >= 4:
-                words.append(line)
+                words.append(line.lower())
     for word in words:
         if center_letter in word:
             word_letters = []
@@ -49,7 +41,8 @@ def get_words(f: str, letters: List[str]) -> List[str]:
                 if item not in word_letters:
                     word_letters.append(item)
             for i in range(len(word_letters)):
-                if word_letters[i][0] in letters and word_letters[i][1] <= letters.count(word_letters[i][0]):
+                if word_letters[i][0] in letters and\
+                        word_letters[i][1] <= letters.count(word_letters[i][0]):
                     word_letters[i] = True
                 else:
                     word_letters[i] = False
@@ -68,26 +61,33 @@ def get_user_words() -> List[str]:
     return words
 
 
-def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
+def get_pure_user_words(user_words: List[str], letters: List[str],
+words_from_dict: List[str]) -> List[str]:
     """
     (list, list, list) -> list
 
     Checks user words with the rules and returns list of those words
     that are not in dictionary.
     """
-    wrong_words = []
-    correct_words = []
-    unused_words = []
-    for i in user_words:
-        if i not in words_from_dict:
-            wrong_words.append(i)
-        else:
-            correct_words.append(i)
-    for i in words_from_dict:
-        if i not in user_words:
-            unused_words.append(i)
+    center_letter = letters[4]
+    pure_words = []
+    for word in user_words:
+        if len(word) >= 4 and center_letter in word \
+                and word not in words_from_dict:
+            used_letters = []
+            for i in word:
+                item = (i, word.count(i))
+                if item not in used_letters:
+                    used_letters.append(item)
+            for i in range(len(used_letters)):
+                if used_letters[i][0] in letters and used_letters[i][1] <= letters.count(used_letters[i][0]):
+                    used_letters[i] = True
+                else:
+                    used_letters[i] = False
+            if False not in used_letters:
+                pure_words.append(word)
 
-    return wrong_words, len(correct_words), unused_words
+    return pure_words
 
 
 def results(*args):
@@ -95,29 +95,31 @@ def results(*args):
     Write results into result.txt
     """
     with open('result.txt', 'w') as file:
-        file.write(f'Correct words: {args[1]}\n')
         file.write('All words: \n')
-        for i in args[3]:
+        for i in args[1]:
             file.write(f'- {i} \n')
-        file.write(f'Wrong words:\n')
+        file.write('Pure words:\n')
         for i in args[0]:
             file.write(f'- {i} \n')
-        file.write('Unused words:\n')
+        file.write('Your input:\n')
         for i in args[2]:
             file.write(f'- {i} \n')
 
 
-def main():
-    """
-    main function. Executes all code
-    """
-    letters = random_letters()
-    words = get_words('en.txt', letters)
-    print(generate_grid(letters))
-    user_input = get_user_words()
-    a = get_pure_user_words(user_input, letters, words)
-    results(a[0], a[1], a[2], words)
+# def main():
+#     """
+#     main function. Executes all code
+#     """
+#     words = get_words('en.txt', ITEMS)
+#     print(generate_grid())
+#     user_input = get_user_words()
+#     a = get_pure_user_words(user_input, ITEMS, words)
+#     results(a, words, user_input)
+#     print(user_input)
+#     print(a)
 
 
-if __name__ == '__main__':
-    main()
+print(get_words('en.txt', [el for el in 'vhtdsrael']))
+
+# if __name__ == '__main__':
+#     main()
