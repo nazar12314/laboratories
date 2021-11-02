@@ -1,7 +1,11 @@
+"""UA target game"""
 import random
 
 
 def generate_grid():
+    """
+    generates a list of random letters
+    """
     letters = 'абвгґдеєжзиіїйклмнопрстуфхцчшщьюя'
     grid = []
     while len(grid) < 5:
@@ -12,6 +16,9 @@ def generate_grid():
 
 
 def get_words(f, letters):
+    """
+    generates a list of words which passed the rules
+    """
     items = []
     result = []
     language_form = {'/n': 'noun', 'noun': 'noun', '/adj': 'adjective', 'adv': 'adverb', '/v': 'verb', 'verb': 'verb'}
@@ -30,6 +37,9 @@ def get_words(f, letters):
 
 
 def check_user_words(user_words, language_part, letters, dict_of_words):
+    """
+    Checks user words, returns correct words and words that were not used
+    """
     correct_words = []
     pure_words = []
     words = [i[0] for i in list(filter(lambda x: x[1] == language_part, dict_of_words))]
@@ -43,6 +53,7 @@ def check_user_words(user_words, language_part, letters, dict_of_words):
 
 
 def main():
+    """Executes all code"""
     language_form = random.choice(('verb', 'adverb', 'adjective', 'noun'))
     generated_letters = generate_grid()
     print(generated_letters)
