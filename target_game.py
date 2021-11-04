@@ -119,7 +119,7 @@ def results(*args):
 #     print(a)
 
 
-print(get_words('en.txt', [el for el in 'vhtdsrael']))
+print(get_words('en.txt', [el for el in 'wumrovkif']))
 
 # if __name__ == '__main__':
 #     main()

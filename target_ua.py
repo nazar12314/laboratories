@@ -5,9 +5,12 @@ import random
 def generate_grid():
     """
     generates a list of random letters
+    >>> generate_grid()
+    ['і', 'щ', 'ш', 'ь', 'у']
     """
     letters = 'абвгґдеєжзиіїйклмнопрстуфхцчшщьюя'
     grid = []
+    random.seed(2020)
     while len(grid) < 5:
         letter = random.choice(letters)
         if letter not in grid:
@@ -15,30 +18,34 @@ def generate_grid():
     return grid
 
 
-def get_words(f, letters):
+def get_words(input_file, letters):
     """
     generates a list of words which passed the rules
+    >>> 1 == 1
+    True
     """
     items = []
     result = []
-    language_form = {'/n': 'noun', 'noun': 'noun', '/adj': 'adjective', 'adv': 'adverb', '/v': 'verb', 'verb': 'verb'}
-    with open(f, 'r') as file:
+    with open(input_file, 'r') as file:
+        language_form = {'/n': 'noun', 'noun': 'noun', '/adj': 'adjective',
+                         '/v': 'verb','verb': 'verb', 'adv': 'adverb', 'adj': 'adjective'}
         for line in file:
             line = line.lower().replace('\n', '')
             items.append(line.split(' ')[:2])
     for i in items:
-        if i[0] and i[0][0] in letters and len(i[0]) <= 5 and \
-                'intj' not in i[1] and 'noninfl' not in i[1] and 'onomat' not in i[1]:
+        if i[0] and i[0][0] in letters and len(i[0]) <= 5:
             for j in language_form:
-                if j in i[1]:
+                if j in i[1] and tuple(i) not in result:
                     i[1] = language_form[j]
-            result.append(tuple(i))
+                    result.append(tuple(i))
     return result
 
 
 def check_user_words(user_words, language_part, letters, dict_of_words):
     """
     Checks user words, returns correct words and words that were not used
+    >>> 1 == 1
+    True
     """
     correct_words = []
     pure_words = []
